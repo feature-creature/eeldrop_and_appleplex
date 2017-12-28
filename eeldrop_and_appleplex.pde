@@ -36,26 +36,25 @@ Visualization eeldropAndAppleplexVis;
 // FFT # of bands - 8 bit || 1 byte
 int fftBandRange = 256;
 float fftSmoothFactor = 0.02; //subjective
-float fftScale=0.5; //subjective - ?? what type of scaling
+float fftScale = 50; //scale bandwidth
 float[] fftSum;
 
-//global colors
-int bg = 150; //gray
-int ed = 0; //white
-int ap = 255; //black
+// audio file
+String fileSource = "jc.mp3"; //"eeldropAndAppleplex.mp3"
 
 void setup() {
     // size : 1920 x 1080 - A2
     // mode : PDF export?
     size(255, 255);
-    background(bg);
+    background(150);
 
     // initialize Minim
     // 'this' identifies this sketch/data directory 
     // as the filepath for the audioplayers' audio file
     // 10 bit buffersize (default)
     eliot = new Minim(this);
-    eeldropAndAppleplexPlayer = eliot.loadFile("eeldropAndAppleplex.mp3", 1024);
+    eeldropAndAppleplexPlayer = eliot.loadFile(fileSource, 1024);
+    eeldropAndAppleplexPlayer.play();
 
     // initialize FFT analyzer
     // ?? "patch" FFT analyzer
@@ -63,17 +62,43 @@ void setup() {
     // ?? calculate band averages by linearly grouping frequency bands.
     fft = new FFT(eeldropAndAppleplexPlayer.bufferSize(), eeldropAndAppleplexPlayer.sampleRate());
     fft.linAverages(fftBandRange);
-    fftSum = new float[fftBandRange];
+    fftSum = new float[fftBandRange]; //empty array
 
     // initialize Visualization
-    // ?? spectrum size
-    eeldropAndAppleplexVis = new Visualization.(fft.specSize());
+    // ?? spectrum size function
+    eeldropAndAppleplexVis = new Visualization(fft.specSize());
     eeldropAndAppleplexVis.setup();
 }
 
 void draw() {
+
+    // send fft data to visualization
+    fft.forward(eeldropAndAppleplexPlayer.mix);
+    for (int i = 0; i < fftBandRange; i++) {
+        // update the fftSum value by adding itself to
+        // the difference between itself and the changing average fft, times a smoothing factor
+        fftSum[i] += (fft.getAvg(i) - fftSum[i]) * fftSmoothFactor;
+        eeldropAndAppleplexVis.setBand(i, fftSum[i] * fftScale); //raw data: fft.getAvg(i)
+        
+        // DEBUGGING
+        //println("avg: " + fft.getAvg(i));
+        //println("updated sum: " + fftSum[i]);
+        //println("updated sum with scaling: " + fftSum[i] * fftScale);
+        //println("-----------------------------------------");
+    }
+
+    // draw visualization
+    eeldropAndAppleplexVis.draw();
 }
 
+
+
+
+
+
+
+
+// GLOBAL HELPER FUNCTIONS
 String date() {
     fill(200);
     rectMode(CORNER);
