@@ -73,3 +73,19 @@ void setup() {
 
 void draw() {
 }
+
+String date() {
+    fill(200);
+    rectMode(CORNER);
+    rect(width/2- 75, height - 25, 140, 25);
+    fill(0);
+    textSize(10);
+    return(
+        year()
+        + "_" + month() 
+        + "_" + day()
+        + "_" + hour()
+        + "_" + minute()
+        + "_" + second()
+        );
+}
