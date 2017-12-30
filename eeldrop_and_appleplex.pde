@@ -45,7 +45,7 @@ String fileSource = "jc.mp3"; //"eeldropAndAppleplex.mp3"
 void setup() {
     // size : 1920 x 1080 - A2
     // mode : PDF export?
-    size(255, 255);
+    size(960, 540);
     background(150);
 
     // initialize Minim
@@ -57,7 +57,8 @@ void setup() {
     eeldropAndAppleplexPlayer.play();
 
     // initialize FFT analyzer
-    // ?? "patch" FFT analyzer
+    // transforms amplitude vs time data to amplitude vs frequency data (generates a spectrum)
+    // frequency resolution = 1 / time range constant
     // ?? where is sample rate declared
     // ?? calculate band averages by linearly grouping frequency bands.
     fft = new FFT(eeldropAndAppleplexPlayer.bufferSize(), eeldropAndAppleplexPlayer.sampleRate());

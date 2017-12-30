@@ -27,21 +27,39 @@ class Visualization {
     }
 
     void draw() {
-
         // background || ghosting
         fill(bg, 25);
         noStroke();
-        rect(0, 0, width, height);
-
+        //rect(0, 0, width, height);
+        //rotation(rotAngle, angleStep);
+        if (rotAngle <= 0.0 || rotAngle >= 10.0) angleStep = -angleStep;
+        rotAngle += angleStep;
         // basic lines
+        pushMatrix();
+        translate(width/2, height/2);
+        scale(0.5);
+        rotate(rotAngle);
+        if (ed <= 0 || ed >= 255) colorStep = -colorStep;
+        ed += colorStep;
         for (int i  = 0; i < fftBandRange; i++) {
-            //if (ed <= 0 || ed >= 255) colorStep = -colorStep;
-            //ed += colorStep;
-   
-            fill(ed,105);
+
+            fill(ed - i + 20, 5);
+            stroke(ed - i + 20, 20);
             //line(i, height, i, height - bands[i]);
-            ellipse(i, height - bands[i],3,3);
+            if (i < 50 && i > 0) {
+                if (i < 5 && i > 0) {
+                    ellipse(i, height/25 - bands[i], 2,2);
+                }
+                pushMatrix();
+                rotate(i);
+                line(i, height/25 - bands[i], i-1, height/25 - bands[i-1]);
+                popMatrix();
+            }
         }
+        fill(bg,75);
+        stroke(bg,75);
+        ellipse(0,0,75,75);
+        popMatrix();
     }
 
     void setBand(int rangeIndex, float fftData) {
