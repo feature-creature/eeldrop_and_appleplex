@@ -37,7 +37,7 @@ class Visualization {
         // basic lines
         pushMatrix();
         translate(width/2, height/2);
-        scale(0.5);
+        scale(2);
         rotate(rotAngle);
         if (ed <= 0 || ed >= 255) colorStep = -colorStep;
         ed += colorStep;
@@ -47,18 +47,20 @@ class Visualization {
             stroke(ed - i + 20, 20);
             //line(i, height, i, height - bands[i]);
             if (i < 50 && i > 0) {
-                if (i < 5 && i > 0) {
-                    ellipse(i, height/25 - bands[i], 2,2);
-                }
                 pushMatrix();
                 rotate(i);
                 line(i, height/25 - bands[i], i-1, height/25 - bands[i-1]);
                 popMatrix();
+                // draw 'footpaths' on top of 'waves'
+                if (i < 5 && i > 0) {
+                    stroke(ed, 50);
+                    ellipse(i, height/25 - bands[i], 2, 2);
+                }
             }
         }
-        fill(bg,75);
-        stroke(bg,75);
-        ellipse(0,0,75,75);
+        fill(bg, 75);
+        stroke(bg, 75);
+        ellipse(0, 0, 75, 75);
         popMatrix();
     }
 
