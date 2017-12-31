@@ -40,12 +40,16 @@ float fftScale = 50; //scale bandwidth
 float[] fftSum;
 
 // audio file
-String fileSource = "jc.mp3"; //"eeldropAndAppleplex.mp3"
+String fileSource = "eeldrop_and_appleplex.wav"; //"jc.mp3"
+
+// text file
+ArrayList<String> words;
 
 void setup() {
     // size : 1920 x 1080 - A2
     // mode : PDF export?
-    size(960, 540);
+    //size(960, 540);
+    fullScreen();
     background(150);
 
     // initialize Minim
@@ -90,9 +94,19 @@ void draw() {
 
     // draw visualization
     eeldropAndAppleplexVis.draw();
+    initializeText();
 }
 
-
+void initializeText(){
+    String[] lines = loadStrings("eeldrop_and_appleplex_only.txt");
+    int fontSize = 10;
+    fill(150);
+    textSize(10);
+    words = new ArrayList<String>();
+    for(int i = 0; i < lines.length; i++){
+           text(lines[i],fontSize*1.5,(fontSize*i) + (fontSize * 1.5));
+    }
+}
 
 
 
