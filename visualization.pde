@@ -34,32 +34,44 @@ class Visualization {
         //rotation(rotAngle, angleStep);
         if (rotAngle <= 0.0 || rotAngle >= 10.0) angleStep = -angleStep;
         rotAngle += angleStep;
-        // basic lines
-        pushMatrix();
-        translate(width/2, height/2);
-        scale(2);
-        rotate(rotAngle);
         if (ed <= 0 || ed >= 255) colorStep = -colorStep;
         ed += colorStep;
+        // basic lines
+        for (int i  = 0; i < fftBandRange; i++) {
+            fill(ed, 10);
+            //ellipse((width/fftBandRange)*i + (width/2), (height/2) - bands[i], 2, 2);
+            if(frameCount % 3 == 0){
+            ellipse((width/fftBandRange)*i + (width/2), (height/2) + (bands[i]*2), 2, 2);
+            }else{
+            ellipse(width - (width/fftBandRange/1.5)*i - (width/2), (height/2) - (bands[i]*2), 2, 2);
+            }
+            //ellipse(width - (width/fftBandRange/1.5)*i - (width/2), (height/2) + bands[i], 2, 2);
+        }
+
+        pushMatrix();
+        translate(width/2, height/2);
+        //scale(2);
+        rotate(rotAngle);
+
         for (int i  = 0; i < fftBandRange; i++) {
 
             fill(ed - i + 20, 5);
             stroke(ed - i + 20, 20);
             //line(i, height, i, height - bands[i]);
-            if (i < 50 && i > 0) {
+            if (i < 50 && i > 0 && bands[i] != 0) {
                 pushMatrix();
                 rotate(i);
                 line(i, height/25 - bands[i], i-1, height/25 - bands[i-1]);
                 popMatrix();
                 // draw 'footpaths' on top of 'waves'
                 if (i < 5 && i > 0) {
-                    stroke(ed, 50);
-                    ellipse(i, height/25 - bands[i], 2, 2);
+                    stroke(255, 50); //255  - ed
+                    ellipse(i, height/25 - bands[i], 1, 1);
                 }
             }
         }
         fill(bg, 75);
-        stroke(bg, 75);
+        stroke(255, 75);
         ellipse(0, 0, 75, 75);
         popMatrix();
     }
